@@ -20,7 +20,7 @@ import VueApexCharts from "vue-apexcharts";
 })
 export default class Chart extends Vue {
   @Prop() private id!: string;
-  @Prop() private series!: any[];
+  @Prop() private series!: Array<{ name: string; data: [string, number][] }>;
 
   private chartOptions = {
     chart: {

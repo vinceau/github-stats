@@ -2,7 +2,12 @@
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png" />
     <HelloWorld msg="Welcome to Your Vue.js App" />
-    <chart :id="chartId" :series="series" />
+    <div v-if="loading">
+      Loading...
+    </div>
+    <div v-if="!loading && data.length > 0">
+      <chart v-for="d in data" :key="d.name" :id="d.name" :series="d.data" />
+    </div>
   </div>
 </template>
 
@@ -11,16 +16,7 @@
 import HelloWorld from "@/components/HelloWorld.vue";
 import Chart from "@/components/Chart.vue";
 
-import releaseData from "../data.json";
-
-const downloadData = releaseData[0].releaseAssets.nodes.map(r => {
-  return {
-    name: r.name,
-    data: r.downloadCountHistory.map(d => [d.tstz, d.downloads]),
-  };
-});
-
-console.log(downloadData);
+import { fetchDownloadCounts } from "../lib/downloadCounts";
 
 export default {
   name: "Home",
@@ -28,10 +24,29 @@ export default {
     HelloWorld,
     chart: Chart,
   },
+  async mounted() {
+    this.loading = true;
+    try {
+      const downloadsMap = await fetchDownloadCounts(
+        "vinceau",
+        "project-clippi"
+      );
+      this.data = Array.from(downloadsMap.entries()).map(([ext, data]) => ({
+        name: ext,
+        data,
+      }));
+      console.log("got this data:");
+      console.log(JSON.stringify(this.data, undefined, 2));
+    } catch (errr) {
+      console.error("Failed to load data");
+    } finally {
+      this.loading = false;
+    }
+  },
   data() {
     return {
-      chartId: "vuechart-example",
-      series: downloadData,
+      data: [],
+      loading: false,
     };
   },
 };
