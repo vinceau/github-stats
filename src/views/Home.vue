@@ -7,13 +7,7 @@
           <li v-for="error in errors" :key="error">{{ error }}</li>
         </ul>
       </div>
-      <input
-        id="name"
-        v-model="message"
-        type="text"
-        name="name"
-        placeholder="owner/repo"
-      />
+      <input id="name" v-model="message" type="text" name="name" placeholder="owner/repo" />
     </form>
   </div>
 </template>
@@ -28,7 +22,6 @@ const validGithubUser = (user: string): boolean => {
 };
 
 const validGithubRepo = (repo: string): boolean => {
-  console.log(`checking if >>>${repo}<<< is valid`);
   const re = /\s/;
   return !re.test(repo);
 };
@@ -44,7 +37,6 @@ export default Vue.extend({
   methods: {
     checkForm: function(e: any) {
       e.preventDefault();
-      console.log("checking for errors");
       this.errors = [];
 
       if (!this.message) {

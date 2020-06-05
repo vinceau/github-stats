@@ -7,11 +7,7 @@
     <div v-if="!loading && data.length > 0 && data[selected]">
       Files:
       <select v-model="selected">
-        <option
-          v-for="option in options"
-          v-bind:key="option.value"
-          v-bind:value="option.value"
-        >
+        <option v-for="option in options" v-bind:key="option.value" v-bind:value="option.value">
           {{ option.text }}
         </option>
       </select>
@@ -44,16 +40,12 @@ export default class Repo extends Vue {
   private data: RepoRelease[] = [];
   private loading = false;
   private async mounted() {
-    console.log("mounted  repo component");
     this.loading = true;
     this.data = await fetchDownloadCounts(this.owner, this.repo);
-    console.log("got this data:");
-    console.log(this.data);
     if (this.data.length > 0) {
       this.ext = this.data[0].extension;
-      console.log(`starting ext: ${this.ext}`);
-      this.options = this.data.map((ext, i) => ({
-        text: ext.extension,
+      this.options = this.data.map((d, i) => ({
+        text: d.extension,
         value: i,
       }));
     }
