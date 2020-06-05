@@ -7,27 +7,19 @@
           <li v-for="error in errors" :key="error">{{ error }}</li>
         </ul>
       </div>
-
-      <p>
-        <label for="name">Message</label>
-        <input
-          id="name"
-          v-model="message"
-          type="text"
-          name="name"
-          placeholder="owner/repo"
-        />
-      </p>
-
-      <p>
-        <input type="submit" value="Submit" />
-      </p>
+      <input
+        id="name"
+        v-model="message"
+        type="text"
+        name="name"
+        placeholder="owner/repo"
+      />
     </form>
-    <p>Message is: {{ message }}</p>
   </div>
 </template>
 
 <script lang="ts">
+import Vue from "vue";
 import router from "@/router";
 
 const validGithubUser = (user: string): boolean => {
@@ -41,7 +33,7 @@ const validGithubRepo = (repo: string): boolean => {
   return !re.test(repo);
 };
 
-export default {
+export default Vue.extend({
   name: "Home",
   data() {
     return {
@@ -77,5 +69,5 @@ export default {
       }
     },
   },
-};
+});
 </script>

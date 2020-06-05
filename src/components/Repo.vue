@@ -1,8 +1,11 @@
 <template>
   <div class="repo-component">
     <h1>{{ owner }}/{{ repo }}</h1>
-    <div v-if="loading">Loading...</div>
+    <div v-if="loading">
+      Fetching data from Github. This could take a while...
+    </div>
     <div v-if="!loading && data.length > 0 && data[selected]">
+      Files:
       <select v-model="selected">
         <option
           v-for="option in options"
@@ -12,7 +15,6 @@
           {{ option.text }}
         </option>
       </select>
-      <span>Selected: {{ selected }}</span>
       <chart :id="data[selected].extension" :series="data[selected].stats" />
     </div>
   </div>
