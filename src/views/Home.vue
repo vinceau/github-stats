@@ -1,45 +1,73 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
-    <apexchart
-      type="line"
-      height="350"
-      :options="chartOptions"
-      :series="series"
-    />
+    <form @submit="checkForm">
+      <div v-if="errors.length">
+        <b>Please correct the following error(s):</b>
+        <ul>
+          <li v-for="error in errors" :key="error">{{ error }}</li>
+        </ul>
+      </div>
+      <input
+        id="name"
+        v-model="message"
+        type="text"
+        name="name"
+        placeholder="owner/repo"
+      />
+    </form>
   </div>
 </template>
 
-<script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+<script lang="ts">
+import Vue from "vue";
+import router from "@/router";
 
-import VueApexCharts from "vue-apexcharts";
+const validGithubUser = (user: string): boolean => {
+  const re = /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i;
+  return re.test(user);
+};
 
-export default {
+const validGithubRepo = (repo: string): boolean => {
+  console.log(`checking if >>>${repo}<<< is valid`);
+  const re = /\s/;
+  return !re.test(repo);
+};
+
+export default Vue.extend({
   name: "Home",
-  components: {
-    HelloWorld,
-    apexchart: VueApexCharts,
-  },
   data() {
     return {
-      chartOptions: {
-        chart: {
-          id: "vuechart-example",
-        },
-        xaxis: {
-          categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998],
-        },
-      },
-      series: [
-        {
-          name: "series-1",
-          data: [30, 40, 45, 50, 49, 60, 70, 91],
-        },
-      ],
+      errors: [] as string[],
+      message: "",
     };
   },
-};
+  methods: {
+    checkForm: function(e: any) {
+      e.preventDefault();
+      console.log("checking for errors");
+      this.errors = [];
+
+      if (!this.message) {
+        this.errors.push("Repo required.");
+        return;
+      }
+
+      const parts = this.message.split("/");
+      if (parts.length !== 2) {
+        this.errors.push("Invalid repo format name");
+      } else if (!validGithubUser(parts[0])) {
+        this.errors.push("Invalid Github username");
+      } else if (!validGithubRepo(parts[1])) {
+        this.errors.push("Invalid Github repo name");
+      }
+      if (!this.errors.length) {
+        router.push({
+          name: "Repo",
+          params: { owner: parts[0], repo: parts[1] },
+        });
+        // return true;
+      }
+    },
+  },
+});
 </script>
