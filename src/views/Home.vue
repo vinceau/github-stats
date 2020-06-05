@@ -1,50 +1,81 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
-    <div v-if="loading">
-      Loading...
-    </div>
-    <div v-if="!loading && data.length > 0">
-      <chart
-        v-for="d in data"
-        :key="d.extension"
-        :id="d.extension"
-        :series="d.stats"
-      />
-    </div>
+    <form @submit="checkForm">
+      <div v-if="errors.length">
+        <b>Please correct the following error(s):</b>
+        <ul>
+          <li v-for="error in errors" :key="error">{{ error }}</li>
+        </ul>
+      </div>
+
+      <p>
+        <label for="name">Message</label>
+        <input
+          id="name"
+          v-model="message"
+          type="text"
+          name="name"
+          placeholder="owner/repo"
+        />
+      </p>
+
+      <p>
+        <input type="submit" value="Submit" />
+      </p>
+    </form>
+    <p>Message is: {{ message }}</p>
   </div>
 </template>
 
-<script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
-import Chart from "@/components/Chart.vue";
+<script lang="ts">
+import router from "@/router";
 
-import { fetchDownloadCounts } from "../lib/downloadCounts";
+const validGithubUser = (user: string): boolean => {
+  const re = /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i;
+  return re.test(user);
+};
+
+const validGithubRepo = (repo: string): boolean => {
+  console.log(`checking if >>>${repo}<<< is valid`);
+  const re = /\s/;
+  return !re.test(repo);
+};
 
 export default {
   name: "Home",
-  components: {
-    HelloWorld,
-    chart: Chart,
-  },
-  async mounted() {
-    this.loading = true;
-    try {
-      this.data = await fetchDownloadCounts("vinceau", "project-clippi");
-      console.log(JSON.stringify(this.data, undefined, 2));
-    } catch (errr) {
-      console.error("Failed to load data");
-    } finally {
-      this.loading = false;
-    }
-  },
   data() {
     return {
-      data: [],
-      loading: false,
+      errors: [] as string[],
+      message: "",
     };
+  },
+  methods: {
+    checkForm: function(e: any) {
+      e.preventDefault();
+      console.log("checking for errors");
+      this.errors = [];
+
+      if (!this.message) {
+        this.errors.push("Repo required.");
+        return;
+      }
+
+      const parts = this.message.split("/");
+      if (parts.length !== 2) {
+        this.errors.push("Invalid repo format name");
+      } else if (!validGithubUser(parts[0])) {
+        this.errors.push("Invalid Github username");
+      } else if (!validGithubRepo(parts[1])) {
+        this.errors.push("Invalid Github repo name");
+      }
+      if (!this.errors.length) {
+        router.push({
+          name: "Repo",
+          params: { owner: parts[0], repo: parts[1] },
+        });
+        // return true;
+      }
+    },
   },
 };
 </script>
