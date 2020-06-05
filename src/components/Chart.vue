@@ -1,11 +1,6 @@
 <template>
   <div class="chart">
-    <apexchart
-      type="line"
-      height="350"
-      :options="chartOptions"
-      :series="series"
-    />
+    <apexchart type="line" height="350" :options="chartOptions" :series="series" />
   </div>
 </template>
 
@@ -33,3 +28,11 @@ export default class Chart extends Vue {
   };
 }
 </script>
+
+<style lang="scss">
+.chart {
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
+}
+</style>
