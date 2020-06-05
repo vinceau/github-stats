@@ -33,7 +33,7 @@ export async function fetchDownloadCounts(owner: string, repo: string, limit = 5
   const params = {
     limit,
   };
-  const releasesInfo: GithubDownloadCounts[] = (await axios.post(url, { params })).data;
+  const releasesInfo: GithubDownloadCounts[] = (await axios.post(url, undefined, { params })).data;
   console.log("got this data:");
   console.log(releasesInfo);
   const result = new Map<string, ReleaseInformation[]>();
