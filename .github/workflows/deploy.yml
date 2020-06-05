@@ -40,7 +40,7 @@ jobs:
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v2.4.0
         env:
-          ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          ACTIONS_DEPLOY_KEY: ${{ secrets.github_token }}
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: ./dist
           CI: true
