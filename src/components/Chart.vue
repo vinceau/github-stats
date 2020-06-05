@@ -19,6 +19,9 @@ export default class Chart extends Vue {
   @Prop() private series!: ReleaseInformation[];
 
   private chartOptions = {
+    markers: {
+      size: 5,
+    },
     chart: {
       id: this.id,
     },
