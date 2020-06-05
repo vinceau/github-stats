@@ -1,13 +1,15 @@
 <template>
   <div class="home">
-    <form @submit="checkForm">
+    <h1>Github Release Stats</h1>
+    <h2>Enter a Github repo below:</h2>
+    <form id="repo-form" @submit="checkForm">
+      <input id="name" v-model="message" type="text" name="name" placeholder="owner/repo" />
       <div v-if="errors.length">
         <b>Please correct the following error(s):</b>
         <ul>
           <li v-for="error in errors" :key="error">{{ error }}</li>
         </ul>
       </div>
-      <input id="name" v-model="message" type="text" name="name" placeholder="owner/repo" />
     </form>
   </div>
 </template>
@@ -63,3 +65,12 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss">
+#repo-form input {
+  border-radius: 4px;
+  border-style: solid;
+  padding: 5px;
+  font-size: 24px;
+}
+</style>
