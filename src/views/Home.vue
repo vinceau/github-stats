@@ -16,6 +16,17 @@
 import HelloWorld from "@/components/HelloWorld.vue";
 
 import VueApexCharts from "vue-apexcharts";
+import releaseData from "../data.json";
+
+const downloadData = releaseData[0].releaseAssets.nodes.map(r => {
+  return {
+    name: r.name,
+    data: r.downloadCountHistory.map(d => [d.tstz, d.downloads]),
+  };
+});
+
+console.log(downloadData);
+
 
 export default {
   name: "Home",
@@ -30,15 +41,10 @@ export default {
           id: "vuechart-example",
         },
         xaxis: {
-          categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998],
+          type: "datetime",
         },
       },
-      series: [
-        {
-          name: "series-1",
-          data: [30, 40, 45, 50, 49, 60, 70, 91],
-        },
-      ],
+      series: downloadData,
     };
   },
 };
