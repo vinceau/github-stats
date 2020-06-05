@@ -12,6 +12,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import VueApexCharts from "vue-apexcharts";
+import { ReleaseInformation } from "../lib/types";
 
 @Component({
   components: {
@@ -20,7 +21,7 @@ import VueApexCharts from "vue-apexcharts";
 })
 export default class Chart extends Vue {
   @Prop() private id!: string;
-  @Prop() private series!: Array<{ name: string; data: [string, number][] }>;
+  @Prop() private series!: ReleaseInformation[];
 
   private chartOptions = {
     chart: {

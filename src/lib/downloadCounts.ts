@@ -1,5 +1,6 @@
 import path from "path";
 import axios from "axios";
+import { ReleaseInformation, RepoRelease } from "./types";
 
 interface GithubDownloadCounts {
   id: string;
@@ -26,15 +27,10 @@ interface GithubDownloadCounts {
   };
 }
 
-export interface ReleaseInformation {
-  name: string; // Name of the asset
-  data: [string, number][]; // ISO Date strings and their download counts
-}
-
 export async function fetchDownloadCounts(
   owner: string,
   repo: string
-): Promise<Map<string, ReleaseInformation[]>> {
+): Promise<RepoRelease[]> {
   console.log("fetching data from github");
   const url = `https://gh-stats-api.herokuapp.com/releases/${owner}/${repo}`;
   const releasesInfo: GithubDownloadCounts[] = (await axios.post(url)).data;
@@ -56,5 +52,10 @@ export async function fetchDownloadCounts(
   });
   console.log("here are some names:");
   console.log(result);
-  return result;
+  const keys = Array.from(result.keys());
+  keys.sort();
+  return keys.map(k => ({
+    extension: k,
+    stats: result.get(k) || [],
+  }));
 }

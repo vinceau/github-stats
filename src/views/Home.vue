@@ -6,7 +6,12 @@
       Loading...
     </div>
     <div v-if="!loading && data.length > 0">
-      <chart v-for="d in data" :key="d.name" :id="d.name" :series="d.data" />
+      <chart
+        v-for="d in data"
+        :key="d.extension"
+        :id="d.extension"
+        :series="d.stats"
+      />
     </div>
   </div>
 </template>
@@ -27,15 +32,7 @@ export default {
   async mounted() {
     this.loading = true;
     try {
-      const downloadsMap = await fetchDownloadCounts(
-        "vinceau",
-        "project-clippi"
-      );
-      this.data = Array.from(downloadsMap.entries()).map(([ext, data]) => ({
-        name: ext,
-        data,
-      }));
-      console.log("got this data:");
+      this.data = await fetchDownloadCounts("vinceau", "project-clippi");
       console.log(JSON.stringify(this.data, undefined, 2));
     } catch (errr) {
       console.error("Failed to load data");
