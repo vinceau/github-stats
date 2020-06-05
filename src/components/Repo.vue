@@ -5,9 +5,9 @@
       Fetching data from Github. This could take a while...
     </div>
     <div v-if="!loading && data.length > 0 && data[selected]">
-      Files:
+      File type:
       <select v-model="selected">
-        <option v-for="option in options" v-bind:key="option.value" v-bind:value="option.value">
+        <option v-for="option in options" :key="option.value" :value="option.value">
           {{ option.text }}
         </option>
       </select>
