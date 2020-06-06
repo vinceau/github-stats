@@ -13,6 +13,9 @@
       </select>
       <chart :id="data[selected].extension" :series="data[selected].stats" />
     </div>
+    <div v-if="!loading && error" class="error-message">
+      {{ error }}
+    </div>
   </div>
 </template>
 
@@ -36,18 +39,24 @@ export default class Repo extends Vue {
     text: string;
     value: number;
   }> = [];
-  private ext = "";
+  private error = "";
   private data: RepoRelease[] = [];
   private loading = false;
   private async mounted() {
     this.loading = true;
-    this.data = await fetchDownloadCounts(this.owner, this.repo);
-    if (this.data.length > 0) {
-      this.ext = this.data[0].extension;
-      this.options = this.data.map((d, i) => ({
-        text: d.extension,
-        value: i,
-      }));
+    try {
+      this.data = await fetchDownloadCounts(this.owner, this.repo);
+      if (this.data.length > 0) {
+        this.options = this.data.map((d, i) => ({
+          text: d.extension,
+          value: i,
+        }));
+      } else {
+        this.error = "No release information available";
+      }
+    } catch (err) {
+      console.error(err);
+      this.error = "Failed to fetch repo information from Github";
     }
     this.loading = false;
   }
@@ -55,4 +64,8 @@ export default class Repo extends Vue {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.error-message {
+  color: red;
+}
+</style>
