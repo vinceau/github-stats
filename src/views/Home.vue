@@ -17,16 +17,7 @@
 <script lang="ts">
 import Vue from "vue";
 import router from "@/router";
-
-const validGithubUser = (user: string): boolean => {
-  const re = /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i;
-  return re.test(user);
-};
-
-const validGithubRepo = (repo: string): boolean => {
-  const re = /\s/;
-  return !re.test(repo);
-};
+import { validGithubRepo, validGithubUser } from "../lib/validation";
 
 export default Vue.extend({
   name: "Home",
