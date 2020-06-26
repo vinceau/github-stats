@@ -1,5 +1,9 @@
 <template>
-  <Repo v-bind:owner="$route.params.owner" v-bind:repo="$route.params.repo" />
+  <Repo
+    :key="`${$route.params.owner}/${$route.params.repo}`"
+    v-bind:owner="$route.params.owner"
+    v-bind:repo="$route.params.repo"
+  />
 </template>
 
 <script>
