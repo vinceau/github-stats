@@ -9,13 +9,25 @@
       Fetching data from Github. This could take a while...
     </div>
     <div v-if="!loading && data.length > 0 && data[selected]">
-      File type:
-      <select v-model="selected">
-        <option v-for="option in options" :key="option.value" :value="option.value">
-          {{ option.text }}
-        </option>
-      </select>
+      <div>
+        File type:
+        <select v-model="selected">
+          <option v-for="option in options" :key="option.value" :value="option.value">
+            {{ option.text }}
+          </option>
+        </select>
+      </div>
       <chart :id="data[selected].extension" :series="data[selected].stats" />
+      <div class="github-logo">
+        <a
+          v-bind:href="`https://github.com/${owner}/${repo}`"
+          title="Show in Github"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img alt="Github logo" src="../assets/github-logo.svg" />
+        </a>
+      </div>
     </div>
     <div v-if="!loading && error" class="error-message">
       {{ error }}
@@ -84,6 +96,13 @@ export default class Repo extends Vue {
     margin: 0;
     padding: 5px 0;
     border: solid 2px transparent;
+  }
+}
+
+.github-logo {
+  margin-top: 50px;
+  img {
+    width: 64px;
   }
 }
 </style>
