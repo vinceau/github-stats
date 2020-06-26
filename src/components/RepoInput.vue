@@ -65,6 +65,7 @@ export default class RepoInput extends Vue {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 #repo-form input {
+  max-width: 90%;
   border-radius: 4px;
   border-style: solid;
   padding: 5px;
