@@ -28,6 +28,13 @@ export default class Chart extends Vue {
     xaxis: {
       type: "datetime",
     },
+    yaxis: [
+      {
+        labels: {
+          formatter: (val: number) => val.toFixed(0),
+        },
+      },
+    ],
   };
 }
 </script>
