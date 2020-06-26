@@ -1,6 +1,10 @@
 <template>
   <div class="repo-component">
-    <h1>{{ owner }}/{{ repo }}</h1>
+    <div class="header">
+      <h1 v-if="!editing" v-on:click="editing = !editing">{{ owner }}/{{ repo }}</h1>
+      <repo-input v-if="editing" v-bind:value="`${owner}/${repo}`" @blur="editing = false" />
+    </div>
+
     <div v-if="loading">
       Fetching data from Github. This could take a while...
     </div>
@@ -24,10 +28,12 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { fetchDownloadCounts } from "../lib/downloadCounts";
 import { RepoRelease } from "@/lib/types";
 import Chart from "./Chart.vue";
+import RepoInput from "./RepoInput.vue";
 
 @Component({
   components: {
-    chart: Chart,
+    Chart,
+    RepoInput,
   },
 })
 export default class Repo extends Vue {
@@ -39,6 +45,7 @@ export default class Repo extends Vue {
     text: string;
     value: number;
   }> = [];
+  private editing = false;
   private error = "";
   private data: RepoRelease[] = [];
   private loading = false;
@@ -67,5 +74,16 @@ export default class Repo extends Vue {
 <style scoped lang="scss">
 .error-message {
   color: red;
+}
+
+.header {
+  margin: 0;
+  margin-top: 20px;
+  margin-bottom: 40px;
+  h1 {
+    margin: 0;
+    padding: 5px 0;
+    border: solid 2px transparent;
+  }
 }
 </style>
